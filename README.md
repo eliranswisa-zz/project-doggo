@@ -1,3 +1,1 @@
 # project-doggo
-
-# amaze
