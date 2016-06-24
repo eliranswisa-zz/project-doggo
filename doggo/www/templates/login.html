@@ -1,0 +1,17 @@
+<ion-view view-title="Barros The Dog" hide-back-button="true">
+  <ion-content class="padding-top">
+    <div class="list">
+      <label class="item item-input">
+        <span class="input-label" >Username</span>
+        <input ng-model="username" type="text">
+      </label>
+      <label class="item item-input">
+        <span class="input-label" >Password</span>
+        <input ng-model="password" type="password">
+      </label>
+    </div>
+    <button class="button button-large button-positive" ng-click="login(username, password)">
+      Login
+    </button>
+  </ion-content>
+</ion-view>
