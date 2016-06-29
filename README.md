@@ -1,7 +1,3 @@
 # project-doggo
 
-# amaze@!
-
-# bulls
-
-# ballls
+## Bridging application between owners of lost dogs and good hearted dog finders.
