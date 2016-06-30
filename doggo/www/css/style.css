@@ -1,1 +1,7 @@
 /* Empty. Add your own CSS if you like */
+.swiper-slide {
+  padding-top: 120px;
+  color: #000;
+  background-color: #fff;
+  text-align: center;
+}
