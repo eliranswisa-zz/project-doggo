@@ -1,14 +1,63 @@
 angular.module('doggo.controllers', ['doggo.services'])
 
 .controller('DashCtrl', function($scope) {
-  firebase.auth().onAuthStateChanged(function(user) {
-    if (user) {
-      console.log("example: " + firebase.auth().currentUser.email)
-      $scope.currentUser = firebase.auth().currentUser.email;
-    } else {
-      console.log("NOTHING")
-    }
+   firebase.auth().onAuthStateChanged(function(user) {
+     if (user) {
+       console.log("example: " + firebase.auth().currentUser.email)
+       $scope.currentUser = firebase.auth().currentUser.email;
+     } else {
+       console.log("NOTHING")
+     }
+  })
+})
+
+.controller('RootController', function($scope, $location, $rootScope) {
+  localStorage.setItem("wat", "hec")
+  var seenWelcomeSlides = localStorage.getItem("seenWelcomeSlides")
+
+  if (!seenWelcomeSlides) {
+    $location.path("/welcomeslides");
+  } else {
+    firebase.auth().onAuthStateChanged(function(user) {
+      if (user) {
+        console.log("Already logged in, skipping to app")
+        transitionToState($location, $rootScope, "/tab/dash")
+      } else {
+        console.log("Not logged in, transitioning to login view")
+        transitionToState($location, $rootScope, "/login")
+      }
+    });
+  }
+})
+
+.controller('WelcomeSlidesController', function($scope, $location, $rootScope) {
+
+  $scope.options = {
+    loop: false,
+    effect: 'fade',
+    speed: 500,
+    paginationHide: false
+  }
+
+  $scope.$on("$ionicSlides.sliderInitialized", function(event, data){
+    // data.slider is the instance of Swiper
+    $scope.slider = data.slider;
   });
+
+  $scope.$on("$ionicSlides.slideChangeStart", function(event, data){
+    console.log('Slide change is beginning');
+  });
+
+  $scope.$on("$ionicSlides.slideChangeEnd", function(event, data){
+    // note: the indexes are 0-based
+    $scope.activeIndex = data.activeIndex;
+    $scope.previousIndex = data.previousIndex;
+  });
+
+  $scope.finishWelcomeSlides = function() {
+    localStorage.setItem("seenWelcomeSlides", "true")
+    $location.path("/login");
+  };
 })
 
 .controller('ChatsCtrl', function($scope, Chats) {

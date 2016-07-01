@@ -31,6 +31,18 @@ angular.module('doggo', ['ionic', 'firebase', 'doggo.controllers'])
   // Each state's controller can be found in controllers.js
   $stateProvider
 
+  .state('root', {
+    url: '/',
+    templateUrl: 'templates/root.html',
+    controller: 'RootController'
+  })
+
+  .state('welcomeslides', {
+    url: '/welcomeslides',
+    templateUrl: 'templates/welcomeSlides.html',
+    controller: 'WelcomeSlidesController'
+  })
+
   .state('login', {
     url: '/login',
     templateUrl: 'templates/login.html',
@@ -86,6 +98,6 @@ angular.module('doggo', ['ionic', 'firebase', 'doggo.controllers'])
   });
 
   // if none of the above states are matched, use this as the fallback
-  $urlRouterProvider.otherwise('/login');
+  $urlRouterProvider.otherwise('/');
 
 });
