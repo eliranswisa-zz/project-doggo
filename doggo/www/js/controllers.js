@@ -12,7 +12,6 @@ angular.module('doggo.controllers', ['doggo.services'])
 })
 
 .controller('RootController', function($scope, $location, $rootScope) {
-  localStorage.setItem("wat", "hec")
   var seenWelcomeSlides = localStorage.getItem("seenWelcomeSlides")
 
   if (!seenWelcomeSlides) {
