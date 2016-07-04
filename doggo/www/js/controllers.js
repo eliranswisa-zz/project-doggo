@@ -1,16 +1,5 @@
 angular.module('doggo.controllers', ['doggo.services'])
 
-.controller('DashCtrl', function($scope) {
-   firebase.auth().onAuthStateChanged(function(user) {
-     if (user) {
-       console.log("example: " + firebase.auth().currentUser.email)
-       $scope.currentUser = firebase.auth().currentUser.email;
-     } else {
-       console.log("NOTHING")
-     }
-  })
-})
-
 .controller('RootController', function($scope, $location, $rootScope) {
   var seenWelcomeSlides = localStorage.getItem("seenWelcomeSlides")
 
@@ -20,7 +9,7 @@ angular.module('doggo.controllers', ['doggo.services'])
     firebase.auth().onAuthStateChanged(function(user) {
       if (user) {
         console.log("Already logged in, skipping to app")
-        transitionToState($location, $rootScope, "/tab/dash")
+        transitionToState($location, $rootScope, "/app/main")
       } else {
         console.log("Not logged in, transitioning to login view")
         transitionToState($location, $rootScope, "/login")
@@ -59,29 +48,19 @@ angular.module('doggo.controllers', ['doggo.services'])
   };
 })
 
-.controller('ChatsCtrl', function($scope, Chats) {
-  // With the new view caching in Ionic, Controllers are only called
-  // when they are recreated or on app start, instead of every page change.
-  // To listen for when this page is active (for example, to refresh data),
-  // listen for the $ionicView.enter event:
-  //
-  //$scope.$on('$ionicView.enter', function(e) {
-  //});
+.controller('AppController', function($scope, $ionicSideMenuDelegate) {
 
-  $scope.chats = Chats.all();
-  $scope.remove = function(chat) {
-    Chats.remove(chat);
+  /* Load user data once. */
+  firebase.auth().onAuthStateChanged(function(user) {
+    if (user) {
+      $scope.currentUser = firebase.auth().currentUser;
+    }
+  });
+
+  $scope.toggleLeftSideMenu = function() {
+    $ionicSideMenuDelegate.toggleLeft();
   };
-})
 
-.controller('ChatDetailCtrl', function($scope, $stateParams, Chats) {
-  $scope.chat = Chats.get($stateParams.chatId);
-})
-
-.controller('AccountCtrl', function($scope) {
-  $scope.settings = {
-    enableFriends: true
-  };
 })
 
 .controller('LoginController', function($scope, $location, $rootScope) {
@@ -90,7 +69,7 @@ angular.module('doggo.controllers', ['doggo.services'])
     if (user) {
       console.log("example: " + firebase.auth().currentUser.email)
       $scope.currentUser = firebase.auth().currentUser.email;
-      transitionToState($location, $rootScope, "/tab/dash")
+      transitionToState($location, $rootScope, "/app/main")
     } else {
       console.log("NOTHING")
     }
@@ -98,8 +77,9 @@ angular.module('doggo.controllers', ['doggo.services'])
 
 
   $scope.login = function(username, password) {
+
     firebase.auth().signInWithEmailAndPassword(username, password).then(function(result) {
-        transitionToState($location, $rootScope, "/tab/dash")
+        transitionToState($location, $rootScope, "/app/main")
       },
       function(error) {
         // Handle Errors here.
