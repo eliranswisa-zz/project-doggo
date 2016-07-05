@@ -49,6 +49,13 @@ angular.module('doggo', ['ionic', 'firebase', 'doggo.controllers'])
     controller: 'LoginController'
   })
 
+  .state('registration', {
+    url: '/registration',
+    templateUrl: 'templates/registration.html',
+    controller: 'registrationController'
+  })
+
+
   // setup an abstract state for the main directive
   .state('app', {
     url: '/app',
