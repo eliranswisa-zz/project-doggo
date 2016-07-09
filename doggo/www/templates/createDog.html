@@ -1,0 +1,96 @@
+<ion-view view-title="Create Dog">
+  <ion-content class="padding-top">
+    <form name="createDog.createForm" ng-submit='createDog.createDog()' novalidate>
+      <div class="list">
+        <label class="item item-input item-floating-label">
+          <span class="input-label">Dog Name</span>
+          <input name="dname" ng-model="createDog.createForm.name" type="text" placeholder="Dog Name" ng-required="true" ng-pattern='/^[a-zA-Z\s\.]*$/'>
+          <p ng-show="createDog.createForm.dname.$error.required && !createDog.createForm.dname.$pristine" class="help-block" style="color: red">Dog name is required</p>
+          <p ng-show="createDog.createForm.dname.$error.pattern" class="help-block" style="color: red">Please enter a valid dog name</p>
+        </label>
+        <label class="item item-input item-select">
+          <div class="input-label">
+            Breed
+          </div>
+          <select ng-model="createDog.createForm.breed" ng-required="true">
+            <option>Mutt</option>
+            <option>Pug</option>
+            <option>Corgi</option>
+            <option>BurgerFlip</option>
+          </select>
+        </label>
+        <label class="item item-input item-select">
+          <div class="input-label">
+            Image
+          </div>
+          <select ng-model="createDog.createForm.img" ng-required="true">
+            <option>img/sample-doggo.jpg</option>
+          </select>
+        </label>
+      </div>
+      <br>
+
+
+      <div class="list">
+        <p style="padding-left:10px">Additional information:</p>
+        <label class="item item-input item-select">
+          <div class="input-label">
+            Gender
+          </div>
+          <select ng-model="createDog.createForm.gender">
+            <option>Male</option>
+            <option>Female</option>
+          </select>
+        </label>
+        <label class="item item-input item-select">
+          <div class="input-label">
+            Age
+          </div>
+          <select ng-model="createDog.createForm.age">
+            <option>Puppy</option>
+            <option>Adult</option>
+            <option>Old</option>
+          </select>
+        </label>
+        <label class="item item-input item-select">
+          <div class="input-label">
+            Size
+          </div>
+          <select ng-model="createDog.createForm.size">
+            <option>Small</option>
+            <option>Medium</option>
+            <option>Large</option>
+          </select>
+        </label>
+        <label class="item item-input item-select">
+          <div class="input-label">
+            Color
+          </div>
+          <select ng-model="createDog.createForm.color">
+            <option>Black</option>
+            <option>Grey</option>
+            <option>Brown</option>
+            <option>Blond</option>
+            <option>White</option>
+            <option>Spotted</option>
+            <option>Mixed</option>
+          </select>
+        </label>
+        <label class="item item-input item-select">
+          <div class="input-label">
+            Chip Scan
+          </div>
+          <select ng-model="createDog.createForm.chip">
+            <option>bloops</option>
+          </select>
+        </label>
+      </div>
+
+      <div class="wrapper" style="text-align:center">
+        <button type="submit" ng-disabled="createDog.createForm.$invalid" class="button button-assertive">
+          Create Dog
+        </button>
+      </div>
+    </form>
+  </ion-content>
+</ion-view>

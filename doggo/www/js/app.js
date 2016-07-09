@@ -43,6 +43,12 @@ angular.module('doggo', ['ionic', 'firebase', 'doggo.controllers'])
     controller: 'WelcomeSlidesController'
   })
 
+  .state('createDog', {
+    url: '/createDog',
+    templateUrl: 'templates/createDog.html',
+    controller: 'createDogController as createDog'
+  })
+
   .state('login', {
     url: '/login',
     templateUrl: 'templates/login.html',
