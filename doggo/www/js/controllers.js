@@ -67,6 +67,10 @@ angular.module('doggo.controllers', ['doggo.services'])
     $ionicSideMenuDelegate.toggleLeft();
   };
 
+  $scope.transitionToCreateDog= function() {
+    transitionToState("createDog", null, $state)
+  };
+
 })
 
 
@@ -133,6 +137,65 @@ angular.module('doggo.controllers', ['doggo.services'])
     transitionToState("registration", null, $state)
   };
 })
+
+.controller('createDogController', function($scope, $state, $ionicHistory) {
+  var vm = this;
+
+  vm.createDog = function() {
+    //console.log(JSON.stringify(dogDetails))
+    var user = firebase.auth().currentUser;
+    if(!user){
+      console.log("user not logged in - how is this possible?")
+      transitionToState("login", null, $state)
+    } else{
+      var form = vm.createForm
+
+      console.log("form")
+      console.log(form)
+      var postData = {};
+      postData['creator'] = user.uid;
+      postData['name'] = form.name;
+      postData['breed'] = form.breed;
+      postData['img'] = form.img;
+      if(form.age)
+        postData['age'] = form.age;
+      if(form.size)
+        postData['size'] = form.size;
+      if(form.color)
+        postData['color'] = form.color;
+      if(form.chip)
+        postData['chip'] = form.chip;
+      if(form.gender)
+        postData['gender'] = form.gender;
+
+      console.log("post:")
+      console.log(postData)
+
+      var newPostKey = firebase.database().ref().child('dogs').push().key;
+      var updates = {};
+      updates['/dogs/' + newPostKey] = postData;
+      //TODO: When Eli handles saving users to database, uncomment this line:
+      //updates['/users/' + user.uid + '/dogs/'] = newPostKey;
+
+      console.log(firebase.database().ref().update(updates));
+
+      /*
+      TODO: Handle 'owners' (like, what does that mean?)
+      */
+      vm.createForm = ''
+      transitionToState("app.main", null, $state)
+    }
+
+  };
+  console.log("CREATING DOGGO")
+
+  vm.goBack = function() {
+    $ionicHistory.goBack();
+  }
+
+})
+
+
 
 function transitionToState(targetState, params, state) {
   if (params != null) {
