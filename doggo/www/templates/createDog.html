@@ -1,24 +1,13 @@
-<ion-view view-title="Create Dog">
+<ion-view view-title="Create Dog" style='background-color: #f2f2f2'>
   <ion-content class="padding-top">
     <form name="createDog.createForm" ng-submit='createDog.createDog()' novalidate>
       <div class="list">
-        <label class="item item-input item-floating-label">
+        <label class="item item-input">
           <span class="input-label">Dog Name</span>
           <input name="dname" ng-model="createDog.createForm.name" type="text" placeholder="Dog Name" ng-required="true" ng-pattern='/^[a-zA-Z\s\.]*$/'>
-          <p ng-show="createDog.createForm.dname.$error.required && !createDog.createForm.dname.$pristine" class="help-block" style="color: red">Dog name is required</p>
-          <p ng-show="createDog.createForm.dname.$error.pattern" class="help-block" style="color: red">Please enter a valid dog name</p>
         </label>
-        <label class="item item-input item-select">
-          <div class="input-label">
-            Breed
-          </div>
-          <select ng-model="createDog.createForm.breed" ng-required="true">
-            <option>Mutt</option>
-            <option>Pug</option>
-            <option>Corgi</option>
-            <option>BurgerFlip</option>
-          </select>
-        </label>
+        <p ng-show="createDog.createForm.dname.$error.required && !createDog.createForm.dname.$pristine" class="help-block" style="color: red">Dog name is required</p>
+        <p ng-show="createDog.createForm.dname.$error.pattern" class="help-block" style="color: red">Please enter a valid dog name</p>
         <label class="item item-input item-select">
           <div class="input-label">
             Image
@@ -27,9 +16,45 @@
             <option>img/sample-doggo.jpg</option>
           </select>
         </label>
+        <div class="item item-button-left">
+          Choose Breed
+          <button type="button" class="button button-positive" ng-click='popover.show($event)'>
+            <i class="icon ion-ios-paw"></i>
+          </button>
+          <p><span ng-repeat="breedSelected in createDog.selection">{{breedSelected}}<span ng-show="!$last">, </span></span></p>
+        </div>
       </div>
-      <br>
 
+      <script id="templates/2breedPopOver.html" type="text/ng-template">
+        <ion-popover-view class="breed-popover fit">
+            <ion-header-bar class="bar bar-header item-input-inset" >
+              <label class="item-input-wrapper textbox-search">
+                <i class="icon ion-ios7-search placeholder-icon"></i>
+                <input type="search" placeholder="Search" ng-model="searchText">
+              </label>
+            </ion-header-bar>
+          <ion-content>
+            <ion-list>
+              <label ng-repeat="dogBreed in createDog.breeds | filter:searchText ">
+                <ion-checkbox type="checkbox" name="selectedBreeds[]" value="{{dogBreed}}" ng-checked="createDog.selection.indexOf(dogBreed) > -1" ng-click="createDog.toggleSelection(dogBreed)"> {{dogBreed}}
+              </label>
+            </ion-list>
+          </ion-content>
+        </ion-popover-view>
+        <style>
+          .popover-backdrop {
+            background: rgba(140, 140, 140, 0.5) !important;
+          }
+          /* TODO: 242,242,242 for background color */
+
+          ion-popover-view.fit {
+            width: 80% !important;
+            /* TODO: is this robust? */
+          }
+        </style>
+      </script>
+
+      <br>
 
       <div class="list">
         <p style="padding-left:10px">Additional information:</p>
@@ -38,8 +63,7 @@
             Gender
           </div>
           <select ng-model="createDog.createForm.gender">
-            <option>Male</option>
-            <option>Female</option>
+            <option ng-repeat='genderOpt in createDog.genders'>{{genderOpt}}</option>
           </select>
         </label>
         <label class="item item-input item-select">
@@ -47,9 +71,7 @@
             Age
           </div>
           <select ng-model="createDog.createForm.age">
-            <option>Puppy</option>
-            <option>Adult</option>
-            <option>Old</option>
+            <option ng-repeat='ageOpt in createDog.ages'>{{ageOpt}}</option>
           </select>
         </label>
         <label class="item item-input item-select">
@@ -57,23 +79,15 @@
             Size
           </div>
           <select ng-model="createDog.createForm.size">
-            <option>Small</option>
-            <option>Medium</option>
-            <option>Large</option>
+            <option ng-repeat='sizeOpt in createDog.sizes'>{{sizeOpt}}</option>
           </select>
         </label>
         <label class="item item-input item-select">
           <div class="input-label">
-            Color
+            Main Color
           </div>
           <select ng-model="createDog.createForm.color">
-            <option>Black</option>
-            <option>Grey</option>
-            <option>Brown</option>
-            <option>Blond</option>
-            <option>White</option>
-            <option>Spotted</option>
-            <option>Mixed</option>
+            <option ng-repeat='colorOpt in createDog.colors'>{{colorOpt}}</option>
           </select>
         </label>
         <label class="item item-input item-select">
@@ -81,13 +95,13 @@
             Chip Scan
           </div>
           <select ng-model="createDog.createForm.chip">
-            <option>bloops</option>
+            <option>Placeholder for chip scan logic</option>
           </select>
         </label>
       </div>
 
       <div class="wrapper" style="text-align:center">
-        <button type="submit" ng-disabled="createDog.createForm.$invalid" class="button button-assertive">
+        <button type="submit" ng-disabled="createDog.createForm.$invalid || createDog.selection.length == 0" class="button button-assertive">
           Create Dog
         </button>
       </div>

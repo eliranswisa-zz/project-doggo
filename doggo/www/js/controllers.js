@@ -67,7 +67,7 @@ angular.module('doggo.controllers', ['doggo.services'])
     $ionicSideMenuDelegate.toggleLeft();
   };
 
-  $scope.transitionToCreateDog= function() {
+  $scope.transitionToCreateDog = function() {
     transitionToState("createDog", null, $state)
   };
 
@@ -138,16 +138,48 @@ angular.module('doggo.controllers', ['doggo.services'])
   };
 })
 
-.controller('createDogController', function($scope, $state, $ionicHistory) {
+.controller('createDogController', function($scope, $state, $ionicHistory, $ionicPopover) {
   var vm = this;
+  vm.sizes = ['Small', 'Medium', 'Large'];
+  vm.colors = ['Black', 'Brown', 'Blond', 'White', 'Grey', 'Spotted', 'Mixed'];
+  vm.ages = ['Puppy', 'Adult', 'Old'];
+  vm.genders = ['Male', 'Female'];
+  vm.breeds = ["Mixed-Breed Dog", "Other", "Boxer", "Basset Hound", "Beagle", "Belgian Shepherd Dog", "Bloodhound", "Border Collie", "Boston Terrier", "Bull Terrier", "Bulldog", "Bullmastiff", "Canaan Dog", "Cavalier King Charles Spaniel", "Chihuahua", "Chow Chow", "Cocker Spaniel", "Collie",
+                "Corgi", "Dachshund", "Dalmatian", "Dobermann", "French Bulldog", "German Shepherd Dog", "Golden Retriever", "Great Dane", "Greyhound", "Jack Russell Terrier", "Labrador", "Mastiff", "Miniature Pinscher", "Pinscher", "Pit Bull", "Pointer", "Pomeranian", "Poodle", "Pug",
+                "Pyrenean Mountain Dog", "Rottweiler", "Russell Terrier", "Samoyed", "Schnauzer", "Shar Pei", "Shiba Inu", "Shih Tzu", "Siberian Husky", "Spitz", "Terrier", "St. Bernard", "Yorkshire Terrier"];
+
+  $ionicPopover.fromTemplateUrl('templates/2breedPopOver.html', {
+    scope: $scope,
+  }).then(function(popover) {
+    $scope.popover = popover
+  });
+
+  $scope.$on('popover.hidden', function() {
+    console.log(vm.selection);
+  });
+
+  // selected fruits
+  vm.selection = [];
+
+  // toggle selection for a given fruit by name
+  vm.toggleSelection = function toggleSelection(dogBreed) {
+    var idx = vm.selection.indexOf(dogBreed);
+    // is currently selected
+    if (idx > -1) {
+      vm.selection.splice(idx, 1);
+    }
+    // is newly selected
+    else {
+      vm.selection.push(dogBreed);
+    }
+  };
 
   vm.createDog = function() {
-    //console.log(JSON.stringify(dogDetails))
     var user = firebase.auth().currentUser;
-    if(!user){
+    if (!user) {
       console.log("user not logged in - how is this possible?")
       transitionToState("login", null, $state)
-    } else{
+    } else {
       var form = vm.createForm
 
       console.log("form")
@@ -155,17 +187,17 @@ angular.module('doggo.controllers', ['doggo.services'])
       var postData = {};
       postData['creator'] = user.uid;
       postData['name'] = form.name;
-      postData['breed'] = form.breed;
+      postData['breed'] = vm.selection;
       postData['img'] = form.img;
-      if(form.age)
+      if (form.age)
         postData['age'] = form.age;
-      if(form.size)
+      if (form.size)
         postData['size'] = form.size;
-      if(form.color)
+      if (form.color)
         postData['color'] = form.color;
-      if(form.chip)
+      if (form.chip)
         postData['chip'] = form.chip;
-      if(form.gender)
+      if (form.gender)
         postData['gender'] = form.gender;
 
       console.log("post:")
@@ -177,11 +209,13 @@ angular.module('doggo.controllers', ['doggo.services'])
       //TODO: When Eli handles saving users to database, uncomment this line:
       //updates['/users/' + user.uid + '/dogs/'] = newPostKey;
 
-      console.log(firebase.database().ref().update(updates));
+      firebase.database().ref().update(updates).then(console.log("Done"));
+      //TODO: Plug in "loading" functionality to play until it returns
 
       /*
       TODO: Handle 'owners' (like, what does that mean?)
       */
+      vm.selection = [];
       vm.createForm = ''
       transitionToState("app.main", null, $state)
     }
