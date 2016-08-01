@@ -7,7 +7,16 @@
 // 'starter.controllers' is found in controllers.js
 angular.module('doggo', ['ionic', 'firebase', 'doggo.controllers'])
 
-.run(function($ionicPlatform) {
+.run(function($ionicPlatform, $rootScope, $state) {
+
+  $rootScope.$on("$stateChangeError", function(event, toState, toParams, fromState, fromParams, error) {
+    // We can catch the error thrown when the $requireSignIn promise is rejected
+    // and redirect the user back to the login page
+    if (error === "AUTH_REQUIRED") {
+      $state.go("login");
+    }
+  });
+
   $ionicPlatform.ready(function() {
     // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
     // for form inputs)
@@ -21,59 +30,51 @@ angular.module('doggo', ['ionic', 'firebase', 'doggo.controllers'])
       StatusBar.styleDefault();
     }
   });
+
 })
 
-.config(function($stateProvider, $urlRouterProvider) {
+.config(function($stateProvider, $urlRouterProvider, $httpProvider) {
 
-  // Ionic uses AngularUI Router which uses the concept of states
-  // Learn more here: https://github.com/angular-ui/ui-router
-  // Set up the various states which the app can be in.
-  // Each state's controller can be found in controllers.js
-  $stateProvider
-
-  .state('root', {
-    url: '/',
-    templateUrl: 'templates/root.html',
-    controller: 'RootController'
-  })
-
-  .state('welcomeslides', {
+  $stateProvider.state('welcomeslides', {
     url: '/welcomeslides',
     templateUrl: 'templates/welcomeSlides.html',
     controller: 'WelcomeSlidesController'
   })
-
   .state('createDog', {
     url: '/createDog',
     templateUrl: 'templates/createDog.html',
-    controller: 'createDogController as createDog'
+    controller: 'createDogController as createDog',
+    resolve: {
+      "currentAuth": ["Auth", function(Auth) {
+        return Auth.$requireSignIn();
+        }]
+    }
   })
-
   .state('login', {
     url: '/login',
     templateUrl: 'templates/login.html',
-    controller: 'LoginController'
+    controller: 'LoginController as login'
   })
-
   .state('registration', {
     url: '/registration',
     templateUrl: 'templates/registration.html',
     controller: 'registrationController'
   })
-
-
-  // setup an abstract state for the main directive
   .state('app', {
     url: '/app',
     abstract: true,
     templateUrl: 'templates/menu.html',
-    controller: 'AppController'
+    controller: 'AppController as app',
+    resolve: {
+      "currentAuth": ["Auth", function(Auth) {
+        return Auth.$requireSignIn();
+        }]
+      }
   })
-
     .state('app.main', {
       url: '/main',
       views: {
-        'menuContent' : {
+        'menuContent': {
           templateUrl: 'templates/main.html'
         }
       }
@@ -81,6 +82,6 @@ angular.module('doggo', ['ionic', 'firebase', 'doggo.controllers'])
 
 
   // if none of the above states are matched, use this as the fallback
-  $urlRouterProvider.otherwise('/');
+  $urlRouterProvider.otherwise('/app/main');
 
 });

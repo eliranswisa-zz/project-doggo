@@ -14,20 +14,14 @@
 
   <ion-side-menu side="left">
     <ion-header-bar class="bar-stable">
-      <h1 class="title">{{ currentUser.email }}</h1>
+      <h1 class="title">{{ app.currentUser.email }}</h1>
     </ion-header-bar>
     <ion-content>
       <ion-list>
-        <ion-item menu-close href="#/app/search">
+        <ion-item menu-close href="#/app/">
           My Doggos
         </ion-item>
-        <ion-item menu-close href="#/app/browse">
-          Browse
-        </ion-item>
-        <ion-item menu-close href="#/app/playlists">
-          Playlists
-        </ion-item>
-        <ion-item menu-close ng-click="signOut()">
+        <ion-item menu-close ng-click="app.signOut()">
           Logout
         </ion-item>
       </ion-list>

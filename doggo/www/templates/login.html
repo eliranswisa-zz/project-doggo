@@ -1,33 +1,36 @@
-<ion-view view-title="Login" hide-back-button="true">
+<ion-view hide-nav-bar="true" hide-back-button="true" style="background-color: #f2f2f2">
+
   <ion-content class="padding-top">
-    <!-- [START facebook_button] -->
-    <br></br>
-    <div class='fb-login-button'>
-      <button class="mdl-button mdl-js-button mdl-button--raised" id="quickstart-sign-in" ng-click="FBSignIn()">Log in with Facebook</button>
+
+    <div class="padding">
+      <button type="button" class="button button-block button-positive" ng-click="login.FBSignIn()">
+        <i class="ion-social-facebook"></i> Login with Facebook
+      </button>
     </div>
-
-    <br></br>
-
-    <!-- [END facebook_button] -->
-    <div style="text-align:center;"> --OR-- </div>
 
     <div>
-      <form>
+      <form name="login.loginForm">
         <div class="list">
           <label class="item item-input">
-            <input type="email" ng-model="email" placeholder="Email">
+              <i class="icon ion-email placeholder-icon"></i>
+            <input type="text" ng-model="login.loginForm.email" placeholder="Email" ng-required="true">
           </label>
           <label class="item item-input">
-            <input type="password" ng-model="password" placeholder="Password">
+            <i class="icon ion-locked placeholder-icon"></i>
+            <input type="password" ng-model="login.loginForm.password" placeholder="Password" ng-required="true">
           </label>
         </div>
-        <button type="button" class="button button-block button-positive" ng-click="emailSignIn(email, password)">
-          Login
-        </button>
-        <button type="button" class="button button-block button-positive" ng-click="rerouteToRegistration()">
-          Register
-        </button>
+        <div class="row">
+          <button type="submit"  ng-disabled="login.loginForm.$invalid" class="button button-block button-assertive" ng-click="login.emailSignIn()">
+            Login
+          </button>
+          <span style="padding-left: 5px; padding-right: 5px"></span>
+          <button type="button" class="button button-block button-assertive" ng-click="login.rerouteToRegistration()">
+            Register
+          </button>
+        </div>
       </form>
     </div>
+
   </ion-content>
 </ion-view>
